@@ -1,0 +1,19 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 690px;
+  .label {
+    width: 180px;
+    height: 80px;
+    text-align: left;
+    padding-left: 18px;
+    box-shadow: 1px 1px 10px gray;
+    margin-right: 10px;
+    border-radius: 2px;
+    line-height: 80rpx;
+  }
+  .label-date {
+    width: 250px;
+  }
+}

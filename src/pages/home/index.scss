@@ -1,0 +1,27 @@
+.index {
+  flex-direction: column;
+  width: 100%;
+}
+.sel-menu {
+  margin: 10px auto;
+}
+.card {
+  margin: 10px auto;
+}
+
+$rd: 80px;
+.fixed-btn {
+  position: fixed;
+  right: 25px;
+  bottom: 30px;
+  width: $rd;
+  height: $rd;
+  border-radius: $rd;
+  background-color: $baseColor;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .map-pin {
+  }
+}
