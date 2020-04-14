@@ -2,7 +2,13 @@ import Taro, { Component } from "@tarojs/taro";
 import { Provider } from "@tarojs/redux";
 
 import Index from "./pages/index";
-
+// import {
+//   _wxGetSetting,
+//   _wxGetUserInfo,
+//   _wxLogin,
+//   wx_getSystemInfo
+// } from "@/common/wx";
+// import { showMsg } from "@/common/utils";
 import configStore from "./store";
 import "taro-ui/dist/style/index.scss";
 import "./app.scss";
@@ -45,7 +51,26 @@ class App extends Component {
   componentDidHide() {}
 
   componentDidCatchError() {}
+  // init() {
+  //   this.loginWx();
+  // }
 
+  // async loginWx() {
+  //   try {
+  //     await _wxLogin();
+  //     const setting = await _wxGetSetting();
+  //     if (setting["scope.userInfo"]) {
+  //       await _wxGetUserInfo();
+  //     }
+  //     const systemInfo = await wx_getSystemInfo();
+  //     console.log("systemInfo", systemInfo);
+  //     this.$options.globalData.systemInfo = systemInfo;
+  //   } catch (e) {
+  //     showMsg(e);
+  //   } finally {
+  //     store.commit("popQueue", "loginWx");
+  //   }
+  // }
   // 在 App 类中的 render() 函数没有实际作用
   // 请勿修改此函数
   render() {

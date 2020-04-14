@@ -5,6 +5,7 @@ import { AtTabs, AtTabsPane } from "taro-ui";
 import { add, minus, asyncAdd } from "../../actions/counter";
 import SelMenu from "../../components/SelMenu";
 import CardPanel from "../../components/CardPanel";
+import LoadMoreWrap from "../../components/LoadMoreWrap";
 import { getSiteList } from "@/http/http-business";
 
 import "./index.scss";
@@ -61,8 +62,34 @@ class Index extends Component {
           sort: "",
           userId: "2"
         }
-      ]
+      ],
+      restH: 0
     };
+  }
+  componentDidMount() {
+    const { windowHeight } = Taro.getSystemInfoSync();
+
+    Taro.createSelectorQuery()
+      .in(this.tab.$scope)
+      .select(".at-tabs__header")
+      .boundingClientRect(rect => {
+        // console.log("rect", rect);
+        // if (all && Array.isArray(rect) && rect.length) {
+        //   resolve(rect);
+        // }
+
+        // if (!all && rect) {
+        //   resolve(rect);
+        // }
+        const h = rect.height;
+        const restH = windowHeight - h;
+        console.log("restH", restH);
+
+        this.setState({
+          restH
+        });
+      })
+      .exec();
   }
   componentWillReceiveProps(nextProps) {
     console.log(this.props, nextProps);
@@ -71,11 +98,11 @@ class Index extends Component {
   componentWillUnmount() {}
 
   componentDidShow() {
-    getSiteList(this.props.main.userInfo.id, 1);
+    // getSiteList(this.props.main.userInfo.id, 1);
   }
 
   componentDidHide() {}
-
+  refTabs = node => (this.tab = node);
   handleClick(value) {
     this.setState({
       current: value
@@ -115,8 +142,32 @@ class Index extends Component {
     );
   };
 
+  // renderLoadMoreChildrenHeader = () => {};
+  renderList = cards => {
+    return cards.map(c => (
+      <CardPanel
+        ext-cls="card"
+        key={c.id}
+        img={c.siteBanner}
+        title={c.siteName}
+        desc={c.siteIntroduce}
+        isCollect={false}
+        onClick={() => {}}
+        onCollect={() => {}}
+      />
+    ));
+  };
   render() {
-    const { zones, zone, time, date, times, tabList, cards } = this.state;
+    const {
+      zones,
+      zone,
+      time,
+      date,
+      times,
+      tabList,
+      cards,
+      restH
+    } = this.state;
     return (
       <View className="index">
         {this.renderFixedBtn()}
@@ -125,9 +176,40 @@ class Index extends Component {
           tabList={tabList}
           scroll
           onClick={this.handleClick.bind(this)}
+          ref={this.refTabs}
         >
           <AtTabsPane current={this.state.current} index={0}>
-            <View>
+            <LoadMoreWrap
+              url="/api/site/getSiteList"
+              height={restH}
+              renderHeader={() => (
+                <SelMenu
+                  ext-cls="sel-menu"
+                  zone={zone}
+                  time={time}
+                  date={date}
+                  zones={zones}
+                  times={times}
+                  onSelChange={this.onSelChange}
+                />
+              )}
+              // template={CardPanel}
+              // renderList={cards =>
+              //   cards.map(c => (
+              //     <CardPanel
+              //       ext-cls="card"
+              //       key={c.id}
+              //       img={c.siteBanner}
+              //       title={c.siteName}
+              //       desc={c.siteIntroduce}
+              //       isCollect={false}
+              //       onClick={this.onClickCardPanel}
+              //       onCollect={this.onCollect(c.id)}
+              //     />
+              //   ))
+              // }
+            />
+            {/* <View>
               <SelMenu
                 ext-cls="sel-menu"
                 zone={zone}
@@ -138,19 +220,8 @@ class Index extends Component {
                 onSelChange={this.onSelChange}
               />
 
-              {cards.map(c => (
-                <CardPanel
-                  ext-cls="card"
-                  key={c.id}
-                  img={c.siteBanner}
-                  title={c.siteName}
-                  desc={c.siteIntroduce}
-                  isCollect={false}
-                  onClick={this.onClickCardPanel}
-                  onCollect={this.onCollect(c.id)}
-                />
-              ))}
-            </View>
+              {this.renderList(cards)}
+            </View> */}
           </AtTabsPane>
           <AtTabsPane current={this.state.current} index={1}>
             <View style="padding: 100px 50px;background-color: #FAFBFC;text-align: center;">

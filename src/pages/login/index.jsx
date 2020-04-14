@@ -3,7 +3,7 @@ import { View, Button, Text } from "@tarojs/components";
 import { connect } from "@tarojs/redux";
 import { wxlogin } from "@/http/http-business";
 import { updateToken, updateUserinfo } from "@/actions/main";
-import { _wxLogin, _wxGetUserInfo } from "@/common/wx";
+import { _wxLogin, _wxGetUserInfo, _wxGetSetting } from "@/common/wx";
 
 import "./index.scss";
 
@@ -32,7 +32,32 @@ class Login extends Component {
   componentWillUnmount() {}
 
   componentDidShow() {}
-
+  componentDidMount() {
+    _wxGetSetting()
+      .then(setting => {
+        if (setting["scope.userInfo"]) {
+          return Promise.all([_wxGetUserInfo(), _wxLogin()]);
+        }
+      })
+      .then(list => {
+        if (list) {
+          const [userInfo, code] = list;
+          const { nickName, avatarUrl } = userInfo;
+          return wxlogin(code, avatarUrl, nickName);
+        }
+      })
+      .then(res => {
+        if (res) {
+          this.props.setUserInfo(res);
+          Taro.switchTab({
+            url: "/pages/home/index"
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
   componentDidHide() {}
 
   renderWxButton = () => {
