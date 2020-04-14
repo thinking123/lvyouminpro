@@ -88,9 +88,7 @@ class LoadMoreWrap extends Component {
   };
   render() {
     const {
-      renderList,
       renderHeader,
-      renderFooter,
       // template as Template,
       key = new Date().getTime(),
       height
@@ -104,22 +102,11 @@ class LoadMoreWrap extends Component {
         scrollY
         onScrollToLower={this.onScrollToLower}
       >
-        {renderHeader && renderHeader()}
-        {renderList && renderList(items)}
+        {renderHeader()}
         {items.map(c => (
-          <CardPanel
-            ext-cls="card"
-            key={c.id}
-            img={c.siteBanner}
-            title={c.siteName}
-            desc={c.siteIntroduce}
-            isCollect={false}
-            onClick={() => {}}
-            onCollect={() => {}}
-          />
+          <CardPanel ext-cls="card" card={c} />
         ))}
         {isLoading ? "isLoading" : ""}
-        {renderFooter && renderFooter()}
       </ScrollView>
     );
   }

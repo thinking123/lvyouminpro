@@ -6,7 +6,7 @@ import { add, minus, asyncAdd } from "../../actions/counter";
 import SelMenu from "../../components/SelMenu";
 import CardPanel from "../../components/CardPanel";
 import LoadMoreWrap from "../../components/LoadMoreWrap";
-import { getSiteList } from "@/http/http-business";
+import { getSiteList, getClassList } from "@/http/http-business";
 
 import "./index.scss";
 @connect(({ main }) => ({
@@ -25,44 +25,7 @@ class Index extends Component {
       date: "",
       zones: ["美国", "中国", "巴西", "日本"],
       times: ["上午", "下午"],
-      tabList: [
-        { title: "标签页1" },
-        { title: "标签页2" },
-        { title: "标签页3" },
-        { title: "标签页4" },
-        { title: "标签页5" },
-        { title: "标签页6" },
-        { title: "标签页7" }
-      ],
-      cards: [
-        {
-          cityCode: "",
-          id: "1",
-          openTime: "",
-          siteAddress: "",
-          siteBanner: "https://qiniu.kaimingwutong.com/home_img_kaiming@3x.png",
-          siteClass: "",
-          siteDetailsImage: "",
-          siteIntroduce:
-            "到了放假等放假到了放假等放假到了放假等放假到了放假等放假到了放假等放假到了放假等放假到了放假等放假到了放假等放假到了放假等放假到了放假等放假到了放假等放假到了放假等放假到了放假等放假到了放假等放假到了放假等放假到了放假等放假到了放假等放假到了放假等放假到了放假等放假到了放假等放假到了放假等放假到了放假等放假到了放假等放假到了放假等放假到了放假等放假到了放假等放假到了放假等放假到了放假等放假到了放假等放假",
-          siteName: "siteName",
-          sort: "",
-          userId: "1"
-        },
-        {
-          cityCode: "",
-          id: "2",
-          openTime: "",
-          siteAddress: "",
-          siteBanner: "https://qiniu.kaimingwutong.com/home_img_kaiming@3x.png",
-          siteClass: "",
-          siteDetailsImage: "",
-          siteIntroduce: "siteIntroduce2",
-          siteName: "siteName2",
-          sort: "",
-          userId: "2"
-        }
-      ],
+      tabList: [],
       restH: 0
     };
   }
@@ -73,14 +36,6 @@ class Index extends Component {
       .in(this.tab.$scope)
       .select(".at-tabs__header")
       .boundingClientRect(rect => {
-        // console.log("rect", rect);
-        // if (all && Array.isArray(rect) && rect.length) {
-        //   resolve(rect);
-        // }
-
-        // if (!all && rect) {
-        //   resolve(rect);
-        // }
         const h = rect.height;
         const restH = windowHeight - h;
         console.log("restH", restH);
@@ -90,6 +45,15 @@ class Index extends Component {
         });
       })
       .exec();
+
+    getClassList().then(res => {
+      this.setState({
+        tabList: res.map(r => {
+          r.title = r.className;
+          return r;
+        })
+      });
+    });
   }
   componentWillReceiveProps(nextProps) {
     console.log(this.props, nextProps);
@@ -121,14 +85,6 @@ class Index extends Component {
     }
   };
 
-  onCollect = id => e => {
-    console.log(id);
-  };
-
-  onClickCardPanel = () => {
-    console.log("onClickCardPanel");
-  };
-
   onNavList = () => {};
 
   renderFixedBtn = () => {
@@ -142,32 +98,8 @@ class Index extends Component {
     );
   };
 
-  // renderLoadMoreChildrenHeader = () => {};
-  renderList = cards => {
-    return cards.map(c => (
-      <CardPanel
-        ext-cls="card"
-        key={c.id}
-        img={c.siteBanner}
-        title={c.siteName}
-        desc={c.siteIntroduce}
-        isCollect={false}
-        onClick={() => {}}
-        onCollect={() => {}}
-      />
-    ));
-  };
   render() {
-    const {
-      zones,
-      zone,
-      time,
-      date,
-      times,
-      tabList,
-      cards,
-      restH
-    } = this.state;
+    const { zones, zone, time, date, times, tabList, restH } = this.state;
     return (
       <View className="index">
         {this.renderFixedBtn()}
@@ -178,61 +110,31 @@ class Index extends Component {
           onClick={this.handleClick.bind(this)}
           ref={this.refTabs}
         >
-          <AtTabsPane current={this.state.current} index={0}>
-            <LoadMoreWrap
-              url="/api/site/getSiteList"
-              height={restH}
-              renderHeader={() => (
-                <SelMenu
-                  ext-cls="sel-menu"
-                  zone={zone}
-                  time={time}
-                  date={date}
-                  zones={zones}
-                  times={times}
-                  onSelChange={this.onSelChange}
+          {tabList.map((tab, index) => {
+            return (
+              <AtTabsPane
+                current={this.state.current}
+                index={tab.id}
+                key={tab.id}
+              >
+                <LoadMoreWrap
+                  url="/api/site/getSiteList"
+                  height={restH}
+                  renderHeader={() => (
+                    <SelMenu
+                      ext-cls="sel-menu"
+                      zone={zone}
+                      time={time}
+                      date={date}
+                      zones={zones}
+                      times={times}
+                      onSelChange={this.onSelChange}
+                    />
+                  )}
                 />
-              )}
-              // template={CardPanel}
-              // renderList={cards =>
-              //   cards.map(c => (
-              //     <CardPanel
-              //       ext-cls="card"
-              //       key={c.id}
-              //       img={c.siteBanner}
-              //       title={c.siteName}
-              //       desc={c.siteIntroduce}
-              //       isCollect={false}
-              //       onClick={this.onClickCardPanel}
-              //       onCollect={this.onCollect(c.id)}
-              //     />
-              //   ))
-              // }
-            />
-            {/* <View>
-              <SelMenu
-                ext-cls="sel-menu"
-                zone={zone}
-                time={time}
-                date={date}
-                zones={zones}
-                times={times}
-                onSelChange={this.onSelChange}
-              />
-
-              {this.renderList(cards)}
-            </View> */}
-          </AtTabsPane>
-          <AtTabsPane current={this.state.current} index={1}>
-            <View style="padding: 100px 50px;background-color: #FAFBFC;text-align: center;">
-              标签页二的内容
-            </View>
-          </AtTabsPane>
-          <AtTabsPane current={this.state.current} index={2}>
-            <View style="padding: 100px 50px;background-color: #FAFBFC;text-align: center;">
-              标签页三的内容
-            </View>
-          </AtTabsPane>
+              </AtTabsPane>
+            );
+          })}
         </AtTabs>
       </View>
     );

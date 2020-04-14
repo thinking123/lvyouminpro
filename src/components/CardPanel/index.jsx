@@ -17,12 +17,24 @@ class CardPanel extends Component {
   onCollect = e => {
     const { onCollect } = this.props;
     e.stopPropagation();
-    onCollect();
+    // onCollect();
   };
+
+  onClick() {}
   render() {
-    const { img, title, desc, isCollect, onCollect, onClick } = this.props;
+    // const { img, title, desc, isCollect, onCollect, onClick } = this.props;
+    const {
+      card: {
+        siteBanner: img,
+        siteName: title,
+        siteIntroduce: desc,
+        isCollect = false
+      } = {}
+      // onCollect,
+      // onClick
+    } = this.props;
     return (
-      <View className="container ext-cls" onClick={onClick}>
+      <View className="container ext-cls" onClick={this.onClick}>
         <Image className="img" src={img} />
         <View className="body">
           <View className="content">

@@ -246,3 +246,40 @@ export function getSiteList(userId, pageNum, cityCode, siteClass) {
 
   return get(url, {}, "").then(res => parseRes(res, ""));
 }
+
+/**
+ GET /api/site/getClassList
+获取分类列表 --编号 005
+
+Response Class (Status 200)
+请求已完成
+
+ModelExample Value
+{
+  "message": "string",
+  "path": "string",
+  "rows": {
+    "className": "string",
+    "classSort": 0,
+    "id": 0
+  },
+  "status": "string"
+}
+
+
+Response Content Type 
+Parameters
+Parameter	Value	Description	Parameter Type	Data Type
+token	
+(required)
+token
+
+header	string
+ */
+export function getClassList() {
+  let url = "/api/site/getClassList";
+
+  url = urlParams(url, {});
+
+  return get(url, {}, "").then(res => parseRes(res, ""));
+}
