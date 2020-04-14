@@ -24,8 +24,27 @@ class LoadMoreWrap extends Component {
   constructor() {
     super(...arguments);
   }
-  componentWillReceiveProps(nextProps) {}
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.reloadKey !== this.props.reloadKey) {
+      this.reload();
+    }
+  }
 
+  reload() {
+    this.setState(
+      {
+        isLoading: false,
+        items: [],
+        total: 0,
+        pages: 0,
+        pageNum: 0,
+        isEnd: false
+      },
+      () => {
+        this.getMore();
+      }
+    );
+  }
   componentWillUnmount() {}
 
   componentDidShow() {}
@@ -53,7 +72,7 @@ class LoadMoreWrap extends Component {
 
     let _url = urlParams(url, {
       pageNum: pageNum + 1,
-      ...params,
+      ...delNullProperty(params),
       userId: this.props.main.userInfo.id
     });
 
@@ -72,6 +91,14 @@ class LoadMoreWrap extends Component {
   };
 
   parseRes = res => {
+    if (!res || res.status != 200) {
+      this.setState({
+        isEnd: true,
+        isError: true,
+        errMsg: res && res.message ? res.message : "error"
+      });
+      return;
+    }
     const { pageNum, pages, total, list = [] } = res.rows;
     const { items: _items } = this.state;
 
@@ -87,26 +114,20 @@ class LoadMoreWrap extends Component {
     });
   };
   render() {
-    const {
-      renderHeader,
-      // template as Template,
-      key = new Date().getTime(),
-      height
-    } = this.props;
-    const { items, isLoading } = this.state;
+    const { key = new Date().getTime() } = this.props;
+    const { items, isLoading, isError, errMsg } = this.state;
     return (
       <ScrollView
-        style={{ height: `${height}px` }}
-        key={key}
+        style={{ height: `100%`, width: "100%" }}
         className="container ext-cls"
         scrollY
         onScrollToLower={this.onScrollToLower}
       >
-        {renderHeader()}
         {items.map(c => (
           <CardPanel ext-cls="card" card={c} />
         ))}
         {isLoading ? "isLoading" : ""}
+        {isError ? errMsg : ""}
       </ScrollView>
     );
   }

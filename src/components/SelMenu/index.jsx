@@ -18,33 +18,26 @@ class SelMenu extends Component {
       end
     };
   }
-  componentWillReceiveProps(nextProps) {
-    console.log(this.props, nextProps);
-  }
 
-  componentWillUnmount() {}
-
-  componentDidShow() {}
-
-  componentDidHide() {}
   renderEmptyLabel = () => {
     return <View className="empty-label"></View>;
   };
   renderLabel = type => {
-    // const { zone, time, date } = this.state;
-    const { zone, time, date } = this.props;
+    const { zone, time, date, zones, times } = this.props;
 
     if (type == "zone") {
-      return <View className="label">{!!zone ? zone : "目的地"}</View>;
-    }
-
-    if (type == "time") {
-      return <View className="label">{!!time ? time : "时间"}</View>;
+      return (
+        <View className="label">{zone >= 0 ? zones[zone] : "目的地"}</View>
+      );
     }
 
     if (type == "date") {
+      return <View className="label">{!!date ? date : "时间"}</View>;
+    }
+
+    if (type == "time") {
       return (
-        <View className="label label-date">{!!date ? date : "出行时间"}</View>
+        <View className="label">{time >= 0 ? times[time] : "出行时间"}</View>
       );
     }
   };

@@ -6,7 +6,8 @@ import { add, minus, asyncAdd } from "../../actions/counter";
 import SelMenu from "../../components/SelMenu";
 import CardPanel from "../../components/CardPanel";
 import LoadMoreWrap from "../../components/LoadMoreWrap";
-import { getSiteList, getClassList } from "@/http/http-business";
+import Tabs from "../../components/Tabs";
+import { getSiteList, getClassList, getCityList } from "@/http/http-business";
 
 import "./index.scss";
 @connect(({ main }) => ({
@@ -17,24 +18,27 @@ class Index extends Component {
     navigationBarTitleText: "首页"
   };
 
+  refKey = new Date().getTime();
   constructor() {
     super(...arguments);
     this.state = {
-      zone: "",
-      time: "",
+      zone: -1,
+      time: -1,
       date: "",
-      zones: ["美国", "中国", "巴西", "日本"],
+      zones: [],
       times: ["上午", "下午"],
       tabList: [],
-      restH: 0
+      restH: 0,
+      current: 0,
+      refKey: new Date().getTime()
     };
   }
   componentDidMount() {
     const { windowHeight } = Taro.getSystemInfoSync();
 
     Taro.createSelectorQuery()
-      .in(this.tab.$scope)
-      .select(".at-tabs__header")
+      .in(this.$scope)
+      .select(".header")
       .boundingClientRect(rect => {
         const h = rect.height;
         const restH = windowHeight - h;
@@ -54,18 +58,16 @@ class Index extends Component {
         })
       });
     });
-  }
-  componentWillReceiveProps(nextProps) {
-    console.log(this.props, nextProps);
-  }
 
-  componentWillUnmount() {}
-
-  componentDidShow() {
-    // getSiteList(this.props.main.userInfo.id, 1);
+    getCityList().then(res => {
+      this.setState({
+        zones: res.map(r => {
+          // r.title = r.cityCaption;
+          return r.cityCaption;
+        })
+      });
+    });
   }
-
-  componentDidHide() {}
   refTabs = node => (this.tab = node);
   handleClick(value) {
     this.setState({
@@ -74,15 +76,10 @@ class Index extends Component {
   }
 
   onSelChange = (id, v) => {
-    if (id == "date") {
-      this.setState({
-        date: v
-      });
-    } else {
-      this.setState({
-        [id]: this.state[`${id}s`][v]
-      });
-    }
+    this.setState({
+      [id]: v,
+      refKey: new Date().getTime()
+    });
   };
 
   onNavList = () => {};
@@ -98,44 +95,77 @@ class Index extends Component {
     );
   };
 
+  renderSelMenu = () => {
+    return (
+      <SelMenu
+        key={tab.id}
+        ext-cls="sel-menu"
+        zone={zone}
+        time={time}
+        date={date}
+        zones={zones}
+        times={times}
+        onSelChange={this.onSelChange}
+      />
+    );
+  };
+
   render() {
-    const { zones, zone, time, date, times, tabList, restH } = this.state;
+    const {
+      zones,
+      zone,
+      time,
+      date,
+      times,
+      tabList,
+      restH,
+      current,
+      refKey
+    } = this.state;
+    const cityCode = zone >= 0 ? zones[zone].adCode : "";
     return (
       <View className="index">
         {this.renderFixedBtn()}
-        <AtTabs
-          current={this.state.current}
-          tabList={tabList}
-          scroll
-          onClick={this.handleClick.bind(this)}
-          ref={this.refTabs}
-        >
-          {tabList.map((tab, index) => {
-            return (
-              <AtTabsPane
-                current={this.state.current}
-                index={tab.id}
-                key={tab.id}
-              >
-                <LoadMoreWrap
-                  url="/api/site/getSiteList"
-                  height={restH}
-                  renderHeader={() => (
-                    <SelMenu
-                      ext-cls="sel-menu"
-                      zone={zone}
-                      time={time}
-                      date={date}
-                      zones={zones}
-                      times={times}
-                      onSelChange={this.onSelChange}
-                    />
-                  )}
-                />
-              </AtTabsPane>
-            );
-          })}
-        </AtTabs>
+
+        <View className="header">
+          <Tabs
+            current={current}
+            tabList={tabList}
+            scroll
+            onClick={this.handleClick.bind(this)}
+            ref={this.refTabs}
+          ></Tabs>
+          <SelMenu
+            ext-cls="sel-menu"
+            zone={zone}
+            time={time}
+            date={date}
+            zones={zones}
+            times={times}
+            onSelChange={this.onSelChange}
+          />
+        </View>
+
+        {tabList.map((tab, index) => {
+          return (
+            <View
+              style={{
+                height: `${restH}px`,
+                display: `${index == current ? "block" : "none"}`
+              }}
+              key={tab.id}
+            >
+              <LoadMoreWrap
+                reloadKey={refKey}
+                url="/api/site/getSiteList"
+                params={{
+                  cityCode,
+                  siteClass: tab.id
+                }}
+              />
+            </View>
+          );
+        })}
       </View>
     );
   }
