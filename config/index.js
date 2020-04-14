@@ -9,8 +9,12 @@ const config = {
   alias: {
     "@/components": path.resolve(__dirname, "..", "src/components"),
     "@/common": path.resolve(__dirname, "..", "src/common"),
+    "@/http": path.resolve(__dirname, "..", "src/http"),
     "@/package": path.resolve(__dirname, "..", "package.json"),
-    "@/project": path.resolve(__dirname, "..", "project.config.json")
+    "@/project": path.resolve(__dirname, "..", "project.config.json"),
+    "@/actions": path.resolve(__dirname, "..", "src/actions"),
+    "@/reducers": path.resolve(__dirname, "..", "src/reducers"),
+    "@/constants": path.resolve(__dirname, "..", "src/constants")
   },
   deviceRatio: {
     "640": 2.34 / 2,

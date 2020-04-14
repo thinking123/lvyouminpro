@@ -5,8 +5,12 @@ import { AtTabs, AtTabsPane } from "taro-ui";
 import { add, minus, asyncAdd } from "../../actions/counter";
 import SelMenu from "../../components/SelMenu";
 import CardPanel from "../../components/CardPanel";
-import "./index.scss";
+import { getSiteList } from "@/http/http-business";
 
+import "./index.scss";
+@connect(({ main }) => ({
+  main
+}))
 class Index extends Component {
   config = {
     navigationBarTitleText: "首页"
@@ -66,7 +70,9 @@ class Index extends Component {
 
   componentWillUnmount() {}
 
-  componentDidShow() {}
+  componentDidShow() {
+    getSiteList(this.props.main.userInfo.id, 1);
+  }
 
   componentDidHide() {}
 
