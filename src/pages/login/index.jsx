@@ -66,6 +66,7 @@ class Login extends Component {
         class="CWXButton external-cls"
         onGetUserInfo={this.onGetUserInfo}
         type="primary"
+        className="btn"
         openType="getUserInfo"
       >
         微信登入

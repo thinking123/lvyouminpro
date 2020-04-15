@@ -40,14 +40,19 @@ class My extends Component {
         <LoadMoreWrap
           renderHeader={() => {
             return (
-              <View className="index">
+              <View className="header">
+              <View className="header-bg"/>
+
+              <View className="header-body">
+
                 <AtAvatar
                   openData={{ type: "userAvatarUrl" }}
                   circle
                 ></AtAvatar>
-                <View>
+                <View className="header-name">
                   <open-data type="userNickName"></open-data>
                 </View>
+              </View>
               </View>
             );
           }}

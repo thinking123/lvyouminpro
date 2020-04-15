@@ -122,7 +122,14 @@ class LoadMoreWrap extends Component {
     const { itemType = "card", onCollect, type } = this.props;
 
     if (itemType == "list") {
-      return items.map(c => <CollectItem ext-cls="list" card={c} />);
+      return (
+        <View className="my">
+          <View className="my-t">我的行程</View>
+          {items.map(c => (
+            <CollectItem ext-cls="list" card={c} />
+          ))}
+        </View>
+      );
     }
     return items.map(c => (
       <CardPanel ext-cls="card" card={c} onCollect={onCollect} type={type} />

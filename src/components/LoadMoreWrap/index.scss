@@ -54,3 +54,22 @@
     }
   }
 }
+
+.my{
+  width:600px;
+  border-radius:8px;
+  box-shadow:0 10rpx 20rpx 1px gray;
+
+margin: 30px auto;
+overflow:hidden;
+  &-t{
+    font-size:30px;
+    padding:18px;
+    border-bottom: 1px solid gray;
+    background-color:$baseColor;
+    color:$white;
+    .list{
+      
+    }
+  }
+}

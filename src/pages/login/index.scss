@@ -1,4 +1,9 @@
 .index {
   flex-direction: column;
   width: 100%;
+
+  .btn {
+    background-color: $baseColor;
+    color: $white;
+  }
 }

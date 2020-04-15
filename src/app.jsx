@@ -44,14 +44,14 @@ class App extends Component {
         {
           pagePath: "pages/home/index",
           text: "路线",
-          iconPath:"../static/img/home.png",
-          selectedIconPath:"../static/img/home-sel.png",
+          iconPath:"img/home.png",
+          selectedIconPath:"img/home-sel.png",
         },
         {
           pagePath: "pages/my/index",
           text: "我的",
-          iconPath:"../static/img/my.png",
-          selectedIconPath:"../static/img/my-sel.png",
+          iconPath:"img/my.png",
+          selectedIconPath:"img/my-sel.png",
         }
       ]
     },
