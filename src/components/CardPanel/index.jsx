@@ -64,23 +64,37 @@ class CardPanel extends Component {
     const { type, card: { addTime, collectType } = {} } = this.props;
     if (type == "collect") {
       return (
-        <View>
-          <View>{!!addTime ? (addTime == 0 ? "上午" : "下午") : ""}</View>
-          <View>{collectType}</View>
+        <View className="time">
+          <View>{addTime}</View>
+          <View>{!!collectType ? (collectType == 0 ? "上午" : "下午") : ""}</View>
         </View>
       );
     }
     return null;
   };
+
+  renderCollect = () => {
+    const { type, } = this.props;
+    const { isCollect } = this.state;
+    const cls = `at-icon heart-icon at-icon-heart${isCollect ? "-2" : ""}`;
+
+    if (type == "collect") {
+      return null;
+    }
+
+    return  (<View className="heart">
+            <View className={cls} onClick={this.onCollect}></View>
+            <View className="heart-text" onClick={this.onCollect}>
+              {isCollect ? "已经加入" : "加入行程"}
+            </View>
+          </View>)
+  }
   render() {
     // const { img, title, desc, isCollect, onCollect, onClick } = this.props;
     const {
       card: { siteBanner = "", siteName: title, siteIntroduce: desc } = {}
-      // onCollect,
-      // onClick
     } = this.props;
     const { isCollect } = this.state;
-    const cls = `at-icon heart-icon at-icon-heart${isCollect ? "-2" : ""}`;
     const img = siteBanner.split(",")[0];
     return (
       <View className="container ext-cls" onClick={this.onClick}>
@@ -91,12 +105,7 @@ class CardPanel extends Component {
             <View className="title">{title}</View>
             <View className="desc">{desc}</View>
           </View>
-          <View className="heart">
-            <View className={cls} onClick={this.onCollect}></View>
-            <View className="heart-text" onClick={this.onCollect}>
-              {isCollect ? "已经加入" : "加入行程"}
-            </View>
-          </View>
+          {this.renderCollect()}
         </View>
       </View>
     );

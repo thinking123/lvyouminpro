@@ -69,7 +69,9 @@ class Index extends Component {
           })
         },
         () => {
-          this.getH();
+          setTimeout(() => {
+            this.getH();
+          });
         }
       );
     });
@@ -181,6 +183,7 @@ class Index extends Component {
             current={current}
             tabList={tabList}
             scroll
+            ext-cls="tablist"
             onClick={this.handleClick.bind(this)}
             ref={this.refTabs}
           ></Tabs>

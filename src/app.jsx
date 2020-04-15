@@ -37,16 +37,26 @@ class App extends Component {
       navigationBarTextStyle: "black"
     },
     tabBar: {
+      color: "#AAB3C2",
+      selectedColor: "#e44855",
+      backgroundColor: "#FFF",
       list: [
         {
           pagePath: "pages/home/index",
-          text: "路线"
+          text: "路线",
+          iconPath:"../static/img/home.png",
+          selectedIconPath:"../static/img/home-sel.png",
         },
         {
           pagePath: "pages/my/index",
-          text: "我的"
+          text: "我的",
+          iconPath:"../static/img/my.png",
+          selectedIconPath:"../static/img/my-sel.png",
         }
       ]
+    },
+    window: {
+      navigationBarBackgroundColor: "#e44855"
     }
   };
 

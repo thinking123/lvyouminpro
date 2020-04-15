@@ -18,7 +18,7 @@ class List extends Component {
       <LoadMoreWrap
         url="/api/site/getCollectSiteList"
         type="collect"
-        renderEmpty={() => <View>empty</View>}
+        renderEmpty={(show) => show && <View>还有收藏，快去收藏吧</View>}
       />
     );
   }

@@ -9,7 +9,7 @@
   margin: 10px auto;
 }
 
-$rd: 80px;
+$rd: 120px;
 .fixed-btn {
   position: fixed;
   right: 25px;
@@ -18,14 +18,20 @@ $rd: 80px;
   height: $rd;
   border-radius: $rd;
   background-color: $baseColor;
+  color: $white;
   z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 60px;
   .map-pin {
   }
 }
 
 .at-tabs-pane {
   height: 100%;
+}
+
+.tablist {
+  background-color: $baseColor;
 }

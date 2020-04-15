@@ -5,6 +5,8 @@ import "./index.scss";
 //Tabs
 
 class Tabs extends Component {
+  static externalClasses = ["ext-cls"];
+
   constructor(props) {
     super(props);
     this.state = {
@@ -69,6 +71,7 @@ class Tabs extends Component {
       {
         tabs: true
       },
+      "ext-cls",
       className
     );
     const scrollX = tabDirection === "horizontal";
