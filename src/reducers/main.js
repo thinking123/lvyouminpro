@@ -1,8 +1,9 @@
-import { TOKEN, USERINFO } from "@/constants/main";
+import { TOKEN, USERINFO, SELECT } from "@/constants/main";
 
 const INITIAL_STATE = {
   // num: 0
-  userInfo: {}
+  userInfo: {},
+  select: {}
 };
 
 export default function counter(state = INITIAL_STATE, action) {
@@ -16,6 +17,11 @@ export default function counter(state = INITIAL_STATE, action) {
       return {
         ...state,
         userInfo: action.userInfo
+      };
+    case SELECT:
+      return {
+        ...state,
+        select: action.select
       };
 
     default:

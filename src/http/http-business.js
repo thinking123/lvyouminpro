@@ -69,12 +69,70 @@ addTime
 
 query	string
  */
-export function collectSite(siteId, collectType, addTime) {
+export function collectSite(userId, siteId, collectType, addTime) {
   let url = "/api/site/collectSite";
   const loadingText = "";
   const errMsg = "";
 
-  url = urlParams(url, { siteId, collectType, addTime });
+  let obj = {
+    userId,
+    siteId,
+    collectType: collectType > 0 ? collectType : "",
+    addTime
+  };
+
+  obj = delNullProperty(obj);
+  url = urlParams(url, obj);
+  return get(url, {}, loadingText).then(res => parseRes(res, errMsg));
+}
+
+/**
+GET /api/site/getSiteById
+通过id获取站点 --编号 001
+
+Response Class (Status 200)
+请求已完成
+
+ModelExample Value
+{
+  "message": "string",
+  "path": "string",
+  "rows": {
+    "cityCode": "string",
+    "id": 0,
+    "openTime": "string",
+    "siteAddress": "string",
+    "siteBanner": "string",
+    "siteClass": 0,
+    "siteDetailsImage": "string",
+    "siteIntroduce": "string",
+    "siteName": "string",
+    "sort": 0,
+    "userId": "string"
+  },
+  "status": "string"
+}
+
+
+Response Content Type 
+Parameters
+Parameter	Value	Description	Parameter Type	Data Type
+token	
+(required)
+token
+
+header	string
+id	
+id
+
+query	string
+ */
+export function getSiteById(id) {
+  let url = "/api/site/getSiteById";
+  const loadingText = "";
+  const errMsg = "";
+
+  url = urlParams(url, { id });
   return get(url, {}, loadingText).then(res => parseRes(res, errMsg));
 }
 

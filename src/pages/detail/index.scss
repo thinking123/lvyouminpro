@@ -1,0 +1,22 @@
+.index {
+  flex-direction: column;
+  width: 100%;
+}
+
+.heart {
+  flex: 2;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  flex-direction: column;
+  color: $baseColor;
+  text-align: center;
+
+  .heart-icon {
+    font-size: 50px;
+  }
+
+  .heart-text {
+    font-size: 20px;
+  }
+}

@@ -6,16 +6,15 @@ import "./index.scss";
 class SelMenu extends Component {
   static externalClasses = ["ext-cls"];
 
-  range = 20;
+  range = 30;
   constructor(props) {
     super(props);
     let d = new Date();
-    const start = [d.getFullYear(), d.getMonth() + 1, d.getDate()].join("-");
+    // const start = [d.getFullYear(), d.getMonth() + 1, d.getDate()].join("-");
     d.setDate(d.getDate() + this.range);
-    const end = [d.getFullYear(), d.getMonth() + 1, d.getDate()].join("-");
+    const start = [d.getFullYear(), d.getMonth() + 1, d.getDate()].join("-");
     this.state = {
-      start,
-      end
+      start
     };
   }
 
@@ -27,12 +26,12 @@ class SelMenu extends Component {
 
     if (type == "zone") {
       return (
-        <View className="label">{zone >= 0 ? zones[zone] : "目的地"}</View>
+        <View className="label">{zone >= 1 ? zones[zone] : "目的地"}</View>
       );
     }
 
     if (type == "date") {
-      return <View className="label">{!!date ? date : "时间"}</View>;
+      return <View className="label label-date">{!!date ? date : "时间"}</View>;
     }
 
     if (type == "time") {
@@ -50,7 +49,7 @@ class SelMenu extends Component {
 
   render() {
     const { start, end } = this.state;
-    const { zones, times } = this.props;
+    const { zones, times, date } = this.props;
     return (
       <View className="container ext-cls">
         <Picker
@@ -67,6 +66,7 @@ class SelMenu extends Component {
           start={start}
           end={end}
           data-id="date"
+          value={date}
         >
           {this.renderLabel("date")}
         </Picker>

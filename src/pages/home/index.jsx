@@ -7,34 +7,131 @@ import SelMenu from "../../components/SelMenu";
 import CardPanel from "../../components/CardPanel";
 import LoadMoreWrap from "../../components/LoadMoreWrap";
 import Tabs from "../../components/Tabs";
-import { getSiteList, getClassList, getCityList } from "@/http/http-business";
+import { updateSelect } from "@/actions/main";
+
+import {
+  getSiteList,
+  getClassList,
+  getCityList,
+  collectSite
+} from "@/http/http-business";
 
 import "./index.scss";
-@connect(({ main }) => ({
-  main
-}))
+@connect(
+  ({ main }) => ({
+    main
+  }),
+  dispatch => ({
+    updateSelect(select) {
+      dispatch(updateSelect(select));
+    }
+  })
+)
 class Index extends Component {
   config = {
     navigationBarTitleText: "首页"
   };
+  range = 30;
 
-  refKey = new Date().getTime();
   constructor() {
     super(...arguments);
+    let d = new Date();
+    d.setDate(d.getDate() + this.range);
+    const start = [d.getFullYear(), d.getMonth() + 1, d.getDate()].join("-");
+
     this.state = {
       zone: -1,
-      time: -1,
-      date: "",
+      time: 0,
+      date: start,
       zones: [],
       times: ["上午", "下午"],
       tabList: [],
+      citys: [],
       restH: 0,
       current: 0,
       refKey: new Date().getTime()
     };
   }
   componentDidMount() {
-    const { windowHeight } = Taro.getSystemInfoSync();
+    const { updateSelect } = this.props;
+    const { time, date } = this.state;
+    updateSelect({
+      time,
+      date
+    });
+    this.getH();
+    getClassList().then(res => {
+      this.setState(
+        {
+          tabList: res.map(r => {
+            r.title = r.className;
+            return r;
+          })
+        },
+        () => {
+          this.getH();
+        }
+      );
+    });
+
+    getCityList().then(res => {
+      this.setState({
+        zones: [
+          "",
+          ...res.map(r => {
+            return r.cityCaption;
+          })
+        ],
+        citys: res
+      });
+    });
+  }
+  componentDidShow() {
+    this.setState({
+      refKey: new Date().getTime()
+    });
+  }
+
+  refTabs = node => (this.tab = node);
+  handleClick(value) {
+    this.setState({
+      current: value
+    });
+  }
+
+  onSelChange = (id, v) => {
+    const { updateSelect } = this.props;
+    const s = {
+      [id]: v
+    };
+    if (id == "zone") {
+      s.refKey = new Date().getTime();
+    }
+    updateSelect({
+      [id]: v
+    });
+    this.setState(s);
+  };
+
+  onNavList = () => {
+    Taro.navigateTo({
+      url: "/pages/list/index"
+    });
+  };
+
+  renderFixedBtn = () => {
+    return (
+      <View className="fixed-btn">
+        <View
+          className="at-icon at-icon-map-pin map-pin"
+          onClick={this.onNavList}
+        ></View>
+      </View>
+    );
+  };
+
+  getH = () => {
+    const { windowHeight, screenHeight } = Taro.getSystemInfoSync();
 
     Taro.createSelectorQuery()
       .in(this.$scope)
@@ -49,64 +146,14 @@ class Index extends Component {
         });
       })
       .exec();
-
-    getClassList().then(res => {
-      this.setState({
-        tabList: res.map(r => {
-          r.title = r.className;
-          return r;
-        })
-      });
-    });
-
-    getCityList().then(res => {
-      this.setState({
-        zones: res.map(r => {
-          // r.title = r.cityCaption;
-          return r.cityCaption;
-        })
-      });
-    });
-  }
-  refTabs = node => (this.tab = node);
-  handleClick(value) {
-    this.setState({
-      current: value
-    });
-  }
-
-  onSelChange = (id, v) => {
-    this.setState({
-      [id]: v,
-      refKey: new Date().getTime()
-    });
   };
 
-  onNavList = () => {};
-
-  renderFixedBtn = () => {
-    return (
-      <View className="fixed-btn">
-        <View
-          className="at-icon at-icon-map-pin map-pin"
-          onClick={this.onNavList}
-        ></View>
-      </View>
-    );
-  };
-
-  renderSelMenu = () => {
-    return (
-      <SelMenu
-        key={tab.id}
-        ext-cls="sel-menu"
-        zone={zone}
-        time={time}
-        date={date}
-        zones={zones}
-        times={times}
-        onSelChange={this.onSelChange}
-      />
+  onCollect = (card, cb) => {
+    const { time, date } = this.state;
+    collectSite(this.props.main.userInfo.id, card.id, time + 1, date).then(
+      res => {
+        cb();
+      }
     );
   };
 
@@ -120,9 +167,11 @@ class Index extends Component {
       tabList,
       restH,
       current,
-      refKey
+      refKey,
+      citys
     } = this.state;
-    const cityCode = zone >= 0 ? zones[zone].adCode : "";
+    const cityCode = zone >= 1 ? citys[zone - 1].adCode : "";
+    console.log(cityCode);
     return (
       <View className="index">
         {this.renderFixedBtn()}
@@ -162,6 +211,8 @@ class Index extends Component {
                   cityCode,
                   siteClass: tab.id
                 }}
+                onCollect={this.onCollect}
+                renderEmpty={show => show && <View>没有数据</View>}
               />
             </View>
           );

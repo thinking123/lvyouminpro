@@ -5,6 +5,7 @@ import { get } from "@/http/http";
 import { showMsg, urlParams, delNullProperty, debounce } from "@/common/utils";
 import { connect } from "@tarojs/redux";
 import CardPanel from "@/components/CardPanel";
+import CollectItem from "@/components/CollectItem";
 
 @connect(({ main }) => ({
   main
@@ -76,18 +77,20 @@ class LoadMoreWrap extends Component {
       userId: this.props.main.userInfo.id
     });
 
+    const fin = () => {
+      this.setState(
+        {
+          isLoading: false
+        },
+        () => {
+          this._loading = false;
+        }
+      );
+    };
+
     get(_url)
       .then(this.parseRes)
-      .finally(() => {
-        this.setState(
-          {
-            isLoading: false
-          },
-          () => {
-            this._loading = false;
-          }
-        );
-      });
+      .then(fin, fin);
   };
 
   parseRes = res => {
@@ -113,21 +116,41 @@ class LoadMoreWrap extends Component {
       items
     });
   };
+
+  renderList = () => {
+    const { items } = this.state;
+    const { itemType = "card", onCollect, type } = this.props;
+
+    if (itemType == "list") {
+      return items.map(c => <CollectItem ext-cls="list" card={c} />);
+    }
+    return items.map(c => (
+      <CardPanel ext-cls="card" card={c} onCollect={onCollect} type={type} />
+    ));
+  };
   render() {
-    const { key = new Date().getTime() } = this.props;
-    const { items, isLoading, isError, errMsg } = this.state;
+    const {
+      key = new Date().getTime(),
+      onCollect,
+      type = "",
+      renderHeader,
+      renderEmpty,
+      itemType = "card",
+      height = "100%"
+    } = this.props;
+    const { items, isLoading, isError, errMsg, isEnd } = this.state;
     return (
       <ScrollView
-        style={{ height: `100%`, width: "100%" }}
+        style={{ height: `${height}`, width: "100%" }}
         className="container ext-cls"
         scrollY
         onScrollToLower={this.onScrollToLower}
       >
-        {items.map(c => (
-          <CardPanel ext-cls="card" card={c} />
-        ))}
+        {renderHeader()}
+        {this.renderList()}
         {isLoading ? "isLoading" : ""}
         {isError ? errMsg : ""}
+        {renderEmpty(isEnd && items.length == 0)}
       </ScrollView>
     );
   }
