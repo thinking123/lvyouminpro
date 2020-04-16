@@ -28,7 +28,8 @@ class App extends Component {
       "pages/home/index",
       "pages/my/index",
       "pages/detail/index",
-      "pages/list/index"
+      "pages/list/index",
+      "pages/update/index"
     ],
     window: {
       backgroundTextStyle: "light",
@@ -44,14 +45,14 @@ class App extends Component {
         {
           pagePath: "pages/home/index",
           text: "路线",
-          iconPath:"img/home.png",
-          selectedIconPath:"img/home-sel.png",
+          iconPath: "img/home.png",
+          selectedIconPath: "img/home-sel.png"
         },
         {
           pagePath: "pages/my/index",
           text: "我的",
-          iconPath:"img/my.png",
-          selectedIconPath:"img/my-sel.png",
+          iconPath: "img/my.png",
+          selectedIconPath: "img/my-sel.png"
         }
       ]
     },

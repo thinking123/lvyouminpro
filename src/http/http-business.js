@@ -87,6 +87,54 @@ export function collectSite(userId, siteId, collectType, addTime) {
 }
 
 /**
+GET /api/login/updateMsgById
+通过id更新用户信息 --编号 A002
+
+Response Class (Status 200)
+Successful — 请求已完成 rows 直接返回token
+
+ModelExample Value
+{}
+
+
+Response Content Type 
+Parameters
+Parameter	Value	Description	Parameter Type	Data Type
+id	
+用户id
+
+query	string
+trueName	
+真是姓名
+
+query	string
+userPhone	
+手机号
+
+query	string
+userWork	
+工作单位
+
+query	string
+ */
+export function updateMsgById(id, trueName, userPhone, userWork) {
+  let url = "/api/login/updateMsgById";
+  const loadingText = "";
+  const errMsg = "";
+
+  let obj = {
+    id,
+    trueName,
+    userPhone,
+    userWork
+  };
+
+  obj = delNullProperty(obj);
+  url = urlParams(url, obj);
+  return get(url, {}, loadingText).then(res => parseRes(res, errMsg));
+}
+
+/**
 GET /api/site/getSiteById
 通过id获取站点 --编号 001
 

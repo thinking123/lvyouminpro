@@ -2,6 +2,8 @@ import Taro, { Component } from "@tarojs/taro";
 import { connect } from "@tarojs/redux";
 import { getSiteById, collectSite } from "@/http/http-business";
 import { View, Button, Text, Swiper, SwiperItem } from "@tarojs/components";
+import { AtList, AtListItem, AtAvatar } from "taro-ui";
+
 import "./index.scss";
 
 @connect(({ main }) => ({
@@ -38,6 +40,26 @@ class Detail extends Component {
     }
   };
 
+  renderContent = () => {
+    const {
+      site: { siteName, siteIntroduce, siteAddress, openTime, isCollect }
+    } = this.state;
+    const cls = `at-icon heart-icon at-icon-heart${isCollect ? "-2" : ""}`;
+
+    return (
+      <AtList>
+        <AtListItem title={siteName} note={`开放时间:${openTime}`} />
+        <AtListItem title="地址" note={siteAddress} />
+        <AtListItem title="简介" note={siteIntroduce} />
+        <View className="heart">
+          <View className={cls} onClick={this.onCollect}></View>
+          <View className="heart-text" onClick={this.onCollect}>
+            {isCollect ? "已经加入" : "加入行程"}
+          </View>
+        </View>
+      </AtList>
+    );
+  };
   render() {
     const {
       site: {
@@ -71,18 +93,7 @@ class Detail extends Component {
           ))}
         </Swiper>
         <View className="body">
-          <View className="content">
-            <View>{siteName}</View>
-            <View>开放时间：{openTime}</View>
-            <View>{siteAddress}</View>
-            <View>{siteIntroduce}</View>
-          </View>
-          <View className="heart">
-            <View className={cls} onClick={this.onCollect}></View>
-            <View className="heart-text" onClick={this.onCollect}>
-              {isCollect ? "已经加入" : "加入行程"}
-            </View>
-          </View>
+          <View className="content">{this.renderContent()}</View>
         </View>
 
         {imgs.map((b, index) => (

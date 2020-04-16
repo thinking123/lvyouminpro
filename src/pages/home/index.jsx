@@ -82,19 +82,6 @@ class Index extends Component {
           });
         }
       );
-      // this.setState(
-      //   {
-      //     tabList: res.map(r => {
-      //       r.title = r.className;
-      //       return r;
-      //     })
-      //   },
-      //   () => {
-      //     setTimeout(() => {
-      //       this.getH();
-      //     });
-      //   }
-      // );
     });
 
     getCityList().then(res => {

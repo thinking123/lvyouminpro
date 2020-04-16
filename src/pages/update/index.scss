@@ -1,0 +1,33 @@
+.index {
+  flex-direction: column;
+  width: 100%;
+}
+.header {
+  position: relative;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  padding-left: 20px;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.5;
+  margin-left: 32px;
+
+  &:before {
+    content: "";
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 30px;
+    background-color: $baseColor;
+    border-radius: 1px;
+  }
+}
+
+.submit {
+  margin-top: 50px;
+  color: #fff;
+  background-color: $baseColor;
+}

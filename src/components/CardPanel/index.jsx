@@ -92,8 +92,8 @@ class CardPanel extends Component {
         <Image className="img" src={img} />
         <View className="body">
           <View className="content">
-            {this.renderTime()}
             <View className="title">{title}</View>
+            {this.renderTime()}
             <View className="desc">{desc}</View>
           </View>
           {type != "collect" && (
