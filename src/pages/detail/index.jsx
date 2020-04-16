@@ -71,22 +71,20 @@ class Detail extends Component {
           ))}
         </Swiper>
         <View className="body">
-        
           <View className="content">
             <View>{siteName}</View>
-        <View>{siteAddress}</View>
-
-        <View>{siteIntroduce}</View>
-       
-</View>
- <View className="heart">
-          <View className={cls} onClick={this.onCollect}></View>
-          <View className="heart-text" onClick={this.onCollect}>
-            {isCollect ? "已经加入" : "加入行程"}
+            <View>开放时间：{openTime}</View>
+            <View>{siteAddress}</View>
+            <View>{siteIntroduce}</View>
+          </View>
+          <View className="heart">
+            <View className={cls} onClick={this.onCollect}></View>
+            <View className="heart-text" onClick={this.onCollect}>
+              {isCollect ? "已经加入" : "加入行程"}
+            </View>
           </View>
         </View>
-</View>
-      
+
         {imgs.map((b, index) => (
           <Image className="img" src={b} />
         ))}

@@ -64,9 +64,14 @@ class SelMenu extends Component {
 
   render() {
     const { start, end } = this.state;
-    const { zones, times, date } = this.props;
+    const { zones, times, date, show } = this.props;
     return (
-      <View className="container ext-cls">
+      <View
+        className="container ext-cls"
+        style={{
+          display: `${show ? "flex" : "none"}`
+        }}
+      >
         <Picker
           mode="selector"
           range={zones}

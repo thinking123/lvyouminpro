@@ -223,17 +223,16 @@ class Index extends Component {
             onClick={this.handleClick.bind(this)}
             ref={this.refTabs}
           ></Tabs>
-          {current != 0 && (
-            <SelMenu
-              ext-cls="sel-menu"
-              zone={zone}
-              time={time}
-              date={date}
-              zones={zones}
-              times={times}
-              onSelChange={this.onSelChange}
-            />
-          )}
+          <SelMenu
+            show={current != 0}
+            ext-cls="sel-menu"
+            zone={zone}
+            time={time}
+            date={date}
+            zones={zones}
+            times={times}
+            onSelChange={this.onSelChange}
+          />
         </View>
 
         {tabList.map((tab, index) => {
@@ -246,7 +245,7 @@ class Index extends Component {
               key={tab.id}
             >
               <LoadMoreWrap
-                reloadKey={refKey}
+                reloadKey={index == 0 ? "1" : refKey}
                 url="/api/site/getSiteList"
                 params={
                   index == 0
@@ -257,9 +256,12 @@ class Index extends Component {
                       }
                 }
                 onCollect={this.onCollect}
-                renderEmpty={show =>
-                  show && <View className="empty">没有数据</View>
-                }
+                renderEmpty={show => {
+                  console.log("show : ", show);
+                  if (show) return <View className="empty">没有数据</View>;
+
+                  return null;
+                }}
               />
             </View>
           );

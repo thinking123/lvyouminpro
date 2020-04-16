@@ -144,6 +144,7 @@ class LoadMoreWrap extends Component {
 
   renderLoading = isLoading =>
     isLoading && <View className="at-icon at-icon-loading-2 loading" />;
+  renderFooter = () => <View className="footer"></View>;
   render() {
     const {
       key = new Date().getTime(),
@@ -155,6 +156,7 @@ class LoadMoreWrap extends Component {
       height = "100%"
     } = this.props;
     const { items, isLoading, isError, errMsg, isEnd } = this.state;
+    const show = isEnd && items.length == 0;
     return (
       <ScrollView
         style={{ height: `${height}`, width: "100%" }}
@@ -166,7 +168,8 @@ class LoadMoreWrap extends Component {
         {this.renderList()}
         {this.renderLoading(isLoading)}
         {isError ? errMsg : ""}
-        {renderEmpty(isEnd && items.length == 0)}
+        {renderEmpty(show)}
+        {this.renderFooter()}
       </ScrollView>
     );
   }

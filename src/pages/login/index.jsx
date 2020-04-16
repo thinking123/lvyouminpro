@@ -54,9 +54,12 @@ class Login extends Component {
           });
         }
       })
-      .catch(err => {
-        console.log(err);
-      });
+      .then(
+        () => {},
+        err => {
+          console.log(err);
+        }
+      );
   }
   componentDidHide() {}
 
@@ -85,9 +88,12 @@ class Login extends Component {
           url: "/pages/home/index"
         });
       })
-      .catch(err => {
-        console.log(err);
-      });
+      .then(
+        () => {},
+        err => {
+          console.log(err);
+        }
+      );
   };
   render() {
     return <View className="index">{this.renderWxButton()}</View>;
