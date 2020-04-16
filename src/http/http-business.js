@@ -1,6 +1,6 @@
 import { get, post } from "./http";
 import { showMsg, urlParams, delNullProperty, debounce } from "@/common/utils";
-const reg = /^2/;
+const reg = /^2\d\d$/;
 // import { useDispatch, useStore } from "@tarojs/redux";
 
 // const store = useStore();

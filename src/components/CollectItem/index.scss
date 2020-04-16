@@ -4,17 +4,16 @@ CardPanel {
   margin: 10px auto;
 }
 .container {
-  padding:8px 18px;
+  padding: 8px 18px;
   border-bottom: 1px solid gray;
 
-  .title{
-    font-size:30px;
+  .title {
+    font-size: 30px;
   }
 
-  .openTime{
-      font-size:25px;
+  .openTime {
+    color: #999;
+    font-size: 28px;
+    line-height: 1.5;
   }
-
-  
-
 }

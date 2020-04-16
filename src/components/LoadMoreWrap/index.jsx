@@ -1,6 +1,7 @@
 import Taro, { Component } from "@tarojs/taro";
 import { View, ScrollView } from "@tarojs/components";
 import "./index.scss";
+import { AtList, AtListItem, AtAvatar } from "taro-ui";
 import { get } from "@/http/http";
 import { showMsg, urlParams, delNullProperty, debounce } from "@/common/utils";
 import { connect } from "@tarojs/redux";
@@ -156,7 +157,6 @@ class LoadMoreWrap extends Component {
       height = "100%"
     } = this.props;
     const { items, isLoading, isError, errMsg, isEnd } = this.state;
-    const show = isEnd && items.length == 0;
     return (
       <ScrollView
         style={{ height: `${height}`, width: "100%" }}
@@ -168,7 +168,6 @@ class LoadMoreWrap extends Component {
         {this.renderList()}
         {this.renderLoading(isLoading)}
         {isError ? errMsg : ""}
-        {renderEmpty(show)}
         {this.renderFooter()}
       </ScrollView>
     );

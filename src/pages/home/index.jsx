@@ -243,12 +243,6 @@ class Index extends Component {
                       }
                 }
                 onCollect={this.onCollect}
-                renderEmpty={show => {
-                  console.log("show : ", show);
-                  if (show) return <View className="empty">没有数据</View>;
-
-                  return null;
-                }}
               />
             </View>
           );
