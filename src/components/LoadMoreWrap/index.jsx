@@ -126,15 +126,24 @@ class LoadMoreWrap extends Component {
         <View className="my">
           <View className="my-t">我的行程</View>
           {items.map(c => (
-            <CollectItem ext-cls="list" card={c} />
+            <CollectItem ext-cls="list" card={c} key={c.id} />
           ))}
         </View>
       );
     }
     return items.map(c => (
-      <CardPanel ext-cls="card" card={c} onCollect={onCollect} type={type} />
+      <CardPanel
+        ext-cls="card"
+        card={c}
+        onCollect={onCollect}
+        type={type}
+        key={c.id}
+      />
     ));
   };
+
+  renderLoading = isLoading =>
+    isLoading && <View className="at-icon at-icon-loading-2 loading" />;
   render() {
     const {
       key = new Date().getTime(),
@@ -155,7 +164,7 @@ class LoadMoreWrap extends Component {
       >
         {renderHeader()}
         {this.renderList()}
-        {isLoading ? "isLoading" : ""}
+        {this.renderLoading(isLoading)}
         {isError ? errMsg : ""}
         {renderEmpty(isEnd && items.length == 0)}
       </ScrollView>

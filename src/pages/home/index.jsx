@@ -45,9 +45,14 @@ class Index extends Component {
       date: start,
       zones: [],
       times: ["上午", "下午"],
-      tabList: [],
+      tabList: [
+        {
+          title: "全部"
+        }
+      ],
       citys: [],
       restH: 0,
+      restHAll: 0,
       current: 0,
       refKey: new Date().getTime()
     };
@@ -62,18 +67,34 @@ class Index extends Component {
     this.getH();
     getClassList().then(res => {
       this.setState(
-        {
-          tabList: res.map(r => {
-            r.title = r.className;
-            return r;
-          })
-        },
+        preState => ({
+          tabList: [
+            ...preState.tabList,
+            ...res.map(r => {
+              r.title = r.className;
+              return r;
+            })
+          ]
+        }),
         () => {
           setTimeout(() => {
             this.getH();
           });
         }
       );
+      // this.setState(
+      //   {
+      //     tabList: res.map(r => {
+      //       r.title = r.className;
+      //       return r;
+      //     })
+      //   },
+      //   () => {
+      //     setTimeout(() => {
+      //       this.getH();
+      //     });
+      //   }
+      // );
     });
 
     getCityList().then(res => {
@@ -96,9 +117,15 @@ class Index extends Component {
 
   refTabs = node => (this.tab = node);
   handleClick(value) {
-    this.setState({
-      current: value
-    });
+    const { restHAll, restH } = this.state;
+    this.setState(
+      {
+        current: value
+      },
+      () => {
+        if (restHAll == 0 || restH == 0) this.getH();
+      }
+    );
   }
 
   onSelChange = (id, v) => {
@@ -123,17 +150,15 @@ class Index extends Component {
 
   renderFixedBtn = () => {
     return (
-      <View className="fixed-btn">
-        <View
-          className="at-icon at-icon-map-pin map-pin"
-          onClick={this.onNavList}
-        ></View>
+      <View className="fixed-btn" onClick={this.onNavList}>
+        <View className="at-icon at-icon-map-pin map-pin"></View>
       </View>
     );
   };
 
   getH = () => {
     const { windowHeight, screenHeight } = Taro.getSystemInfoSync();
+    const { current } = this.state;
 
     Taro.createSelectorQuery()
       .in(this.$scope)
@@ -141,11 +166,21 @@ class Index extends Component {
       .boundingClientRect(rect => {
         const h = rect.height;
         const restH = windowHeight - h;
-        console.log("restH", restH);
 
-        this.setState({
-          restH
-        });
+        if (current != 0) {
+          console.log("restH", restH);
+
+          this.setState({
+            restH
+          });
+        }
+        if (current == 0) {
+          console.log("restHAll", restH);
+
+          this.setState({
+            restHAll: restH
+          });
+        }
       })
       .exec();
   };
@@ -168,12 +203,13 @@ class Index extends Component {
       times,
       tabList,
       restH,
+      restHAll,
       current,
       refKey,
       citys
     } = this.state;
     const cityCode = zone >= 1 ? citys[zone - 1].adCode : "";
-    console.log(cityCode);
+
     return (
       <View className="index">
         {this.renderFixedBtn()}
@@ -187,22 +223,24 @@ class Index extends Component {
             onClick={this.handleClick.bind(this)}
             ref={this.refTabs}
           ></Tabs>
-          <SelMenu
-            ext-cls="sel-menu"
-            zone={zone}
-            time={time}
-            date={date}
-            zones={zones}
-            times={times}
-            onSelChange={this.onSelChange}
-          />
+          {current != 0 && (
+            <SelMenu
+              ext-cls="sel-menu"
+              zone={zone}
+              time={time}
+              date={date}
+              zones={zones}
+              times={times}
+              onSelChange={this.onSelChange}
+            />
+          )}
         </View>
 
         {tabList.map((tab, index) => {
           return (
             <View
               style={{
-                height: `${restH}px`,
+                height: `${current == 0 ? restHAll : restH}px`,
                 display: `${index == current ? "block" : "none"}`
               }}
               key={tab.id}
@@ -210,12 +248,18 @@ class Index extends Component {
               <LoadMoreWrap
                 reloadKey={refKey}
                 url="/api/site/getSiteList"
-                params={{
-                  cityCode,
-                  siteClass: tab.id
-                }}
+                params={
+                  index == 0
+                    ? {}
+                    : {
+                        cityCode,
+                        siteClass: tab.id
+                      }
+                }
                 onCollect={this.onCollect}
-                renderEmpty={show => show && <View>没有数据</View>}
+                renderEmpty={show =>
+                  show && <View className="empty">没有数据</View>
+                }
               />
             </View>
           );

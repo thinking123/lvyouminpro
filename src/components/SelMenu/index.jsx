@@ -21,22 +21,37 @@ class SelMenu extends Component {
   renderEmptyLabel = () => {
     return <View className="empty-label"></View>;
   };
+
+  renderIcon = () => (
+    <View className="at-icon at-icon-chevron-down icon"></View>
+  );
   renderLabel = type => {
     const { zone, time, date, zones, times } = this.props;
 
     if (type == "zone") {
       return (
-        <View className="label">{zone >= 1 ? zones[zone] : "目的地"}</View>
+        <View className="label">
+          {zone >= 1 ? zones[zone] : "目的地"}
+          {this.renderIcon()}
+        </View>
       );
     }
 
     if (type == "date") {
-      return <View className="label label-date">{!!date ? date : "时间"}</View>;
+      return (
+        <View className="label label-date">
+          {!!date ? date : "时间"}
+          {this.renderIcon()}
+        </View>
+      );
     }
 
     if (type == "time") {
       return (
-        <View className="label">{time >= 0 ? times[time] : "出行时间"}</View>
+        <View className="label">
+          {time >= 0 ? times[time] : "出行时间"}
+          {this.renderIcon()}
+        </View>
       );
     }
   };

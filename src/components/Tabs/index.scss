@@ -4,7 +4,7 @@ $spacing-v-lg: 12px * $hd !default;
 $font-size-base: 14px * $hd !default; // 常用字号
 
 $color-text-base: #333 !default; // 文字的基本色
-$color-brand: #6190e8 !default;
+$color-brand: #fff !default;
 $at-tabs-color: $color-text-base !default;
 $at-tabs-color-active: $color-brand !default;
 $at-tabs-line-height: 1px !default;
@@ -23,7 +23,7 @@ $at-tabs-bg-color: $color-bg !default;
     position: relative;
     flex: 1;
     padding: $spacing-v-lg $spacing-h-lg;
-    color: $at-tabs-color;
+    color: #fff;
     font-size: $at-tabs-font-size;
     text-overflow: ellipsis;
     overflow: hidden;

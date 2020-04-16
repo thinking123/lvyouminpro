@@ -61,38 +61,25 @@ class CardPanel extends Component {
     });
   }
   renderTime = () => {
-    const { type, card: { addTime, collectType } = {} } = this.props;
+    const { type, card: { addTime, collectType, openTime } = {} } = this.props;
     if (type == "collect") {
       return (
         <View className="time">
           <View>{addTime}</View>
-          <View>{!!collectType ? (collectType == 0 ? "上午" : "下午") : ""}</View>
+          <View>
+            {!!collectType ? (collectType == 0 ? "上午" : "下午") : ""}
+          </View>
         </View>
       );
     }
-    return null;
+    return (
+      <View className="time">
+        <View>开放时间：{openTime}</View>
+      </View>
+    );
   };
 
-//   renderCollect = () => {
-//     const { type, } = this.props;
-//     const { isCollect } = this.state;
-//     const cls = `at-icon heart-icon at-icon-heart${isCollect ? "-2" : ""}`;
-
-// console.log('renderCollect ' , type)
-//     if (type == "collect") {
-//       return null;
-//     }
-
-//     return  (<View className="heart">
-//             <View className={cls} onClick={this.onCollect}></View>
-//             <View className="heart-text" onClick={this.onCollect}>
-//               {isCollect ? "已经加入" : "加入行程"}
-//             </View>
-//           </View>)
-//   }
   render() {
-
-    // const { img, title, desc, isCollect, onCollect, onClick } = this.props;
     const {
       card: { siteBanner = "", siteName: title, siteIntroduce: desc } = {},
       type
@@ -109,12 +96,14 @@ class CardPanel extends Component {
             <View className="title">{title}</View>
             <View className="desc">{desc}</View>
           </View>
-          {type != 'collect' && <View className="heart">
-            <View className={cls} onClick={this.onCollect}></View>
-            <View className="heart-text" onClick={this.onCollect}>
-              {isCollect ? "已经加入" : "加入行程"}
+          {type != "collect" && (
+            <View className="heart">
+              <View className={cls} onClick={this.onCollect}></View>
+              <View className="heart-text" onClick={this.onCollect}>
+                {isCollect ? "已经加入" : "加入行程"}
+              </View>
             </View>
-          </View>}
+          )}
         </View>
       </View>
     );
