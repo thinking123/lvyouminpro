@@ -3,12 +3,20 @@ import { connect } from "@tarojs/redux";
 import { getSiteById, collectSite } from "@/http/http-business";
 import { View, Button, Text, Swiper, SwiperItem } from "@tarojs/components";
 import { AtList, AtListItem, AtAvatar } from "taro-ui";
+import { setCollect } from "@/actions/main";
 
 import "./index.scss";
 
-@connect(({ main }) => ({
-  main
-}))
+@connect(
+  ({ main }) => ({
+    main
+  }),
+  dispatch => ({
+    setCollect(userId, siteId, collectType, addTime) {
+      return dispatch(setCollect(userId, siteId, collectType, addTime));
+    }
+  })
+)
 class Detail extends Component {
   config = {
     navigationBarTitleText: "详情"
@@ -28,13 +36,15 @@ class Detail extends Component {
     const {
       main: {
         select: { time, date }
-      }
+      },
+      setCollect
     } = this.props;
+
     e.stopPropagation();
     const { site } = this.state;
     const { isCollect, id } = site;
     if (!isCollect) {
-      collectSite(this.props.main.userInfo.id, id, time + 1, date).then(res => {
+      setCollect(this.props.main.userInfo.id, id, time + 1, date).then(res => {
         this.setState({ site: { ...site, isCollect: true } });
       });
     }

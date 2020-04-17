@@ -1,5 +1,11 @@
-import { TOKEN, USERINFO, SELECT } from "../constants/main";
-import { getSiteList as _getSiteList } from "@/http/http-business";
+import {
+  TOKEN,
+  USERINFO,
+  SELECT,
+  COLLECTLIST,
+  RESETCOLLECTLIST
+} from "../constants/main";
+import { collectSite } from "@/http/http-business";
 
 export const updateToken = token => {
   return {
@@ -22,11 +28,36 @@ export const updateSelect = select => {
   };
 };
 
+export const collectList = id => {
+  return {
+    type: COLLECTLIST,
+    id
+  };
+};
+
+export const resetCollectList = () => {
+  return {
+    type: RESETCOLLECTLIST
+  };
+};
+
 // 异步的action
-export function getSiteList() {
+export function setCollect(userId, siteId, collectType, addTime) {
   return (dispatch, getState) => {
-    setTimeout(() => {
-      dispatch(add());
-    }, 2000);
+    return collectSite(userId, siteId, collectType, addTime).then(() => {
+      dispatch(collectList(siteId));
+    });
+  };
+}
+
+export function fetchPosts(subreddit) {
+  return (dispatch, getState) => {
+    // dispatch(requestPosts(subreddit));
+    return fetch(`https://www.reddit.com/r/${subreddit}.json`)
+      .then(
+        response => response.json(),
+        error => console.log("An error occurred.", error)
+      )
+      .then(json => dispatch(receivePosts(subreddit, json)));
   };
 }

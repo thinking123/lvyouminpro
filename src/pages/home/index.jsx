@@ -7,7 +7,7 @@ import SelMenu from "../../components/SelMenu";
 import CardPanel from "../../components/CardPanel";
 import LoadMoreWrap from "../../components/LoadMoreWrap";
 import Tabs from "../../components/Tabs";
-import { updateSelect } from "@/actions/main";
+import { updateSelect, setCollect } from "@/actions/main";
 
 import {
   getSiteList,
@@ -24,6 +24,9 @@ import "./index.scss";
   dispatch => ({
     updateSelect(select) {
       dispatch(updateSelect(select));
+    },
+    setCollect(userId, siteId, collectType, addTime) {
+      return dispatch(setCollect(userId, siteId, collectType, addTime));
     }
   })
 )
@@ -97,9 +100,9 @@ class Index extends Component {
     });
   }
   componentDidShow() {
-    this.setState({
-      refKey: new Date().getTime()
-    });
+    // this.setState({
+    //   refKey: new Date().getTime()
+    // });
   }
 
   refTabs = node => (this.tab = node);
@@ -174,7 +177,8 @@ class Index extends Component {
 
   onCollect = (card, cb) => {
     const { time, date } = this.state;
-    collectSite(this.props.main.userInfo.id, card.id, time + 1, date).then(
+    const { setCollect } = this.props;
+    setCollect(this.props.main.userInfo.id, card.id, time + 1, date).then(
       res => {
         cb();
       }

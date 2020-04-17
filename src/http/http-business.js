@@ -1,6 +1,6 @@
 import { get, post } from "./http";
 import { showMsg, urlParams, delNullProperty, debounce } from "@/common/utils";
-const reg = /^2\d\d$/;
+const reg = /^2/;
 // import { useDispatch, useStore } from "@tarojs/redux";
 
 // const store = useStore();
@@ -83,7 +83,14 @@ export function collectSite(userId, siteId, collectType, addTime) {
 
   obj = delNullProperty(obj);
   url = urlParams(url, obj);
-  return get(url, {}, loadingText).then(res => parseRes(res, errMsg));
+  return get(url, {}, loadingText).then(res => {
+    if (!res || res.status == "2001") {
+      const msg = "该时间已有行程，请选择其他时间";
+      showMsg(msg);
+      throw new Error(msg ? msg : "error");
+    }
+    return parseRes(res, errMsg);
+  });
 }
 
 /**

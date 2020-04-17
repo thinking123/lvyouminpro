@@ -1,10 +1,13 @@
 import Taro, { Component } from "@tarojs/taro";
 import classNames from "classnames";
-import { collectSite } from "@/http/http-business";
 import { View, Text } from "@tarojs/components";
+import { connect } from "@tarojs/redux";
 import { urlParams } from "@/common/utils";
 import "./index.scss";
 
+@connect(({ main }) => ({
+  main
+}))
 class CardPanel extends Component {
   static externalClasses = ["ext-cls"];
 
@@ -12,14 +15,30 @@ class CardPanel extends Component {
     isCollect: false
   };
   componentDidMount() {
-    const { type } = this.props;
-    const isCollect = type == "collect";
+    const {
+      type,
+      card,
+      main: { ids }
+    } = this.props;
+    const isCollect = type == "collect" || ids.includes(card.id);
     console.log("type : ", type, isCollect);
     this.setState({
       isCollect
     });
   }
-  componentWillReceiveProps(nextProps) {}
+  componentWillReceiveProps(nextProps) {
+    const {
+      card,
+      main: { ids }
+    } = nextProps;
+    const { isCollect } = this.state;
+    if (nextProps.main.ids.includes(card.id) && !isCollect) {
+      console.log("render componentWillReceiveProps");
+      this.setState({
+        isCollect: true
+      });
+    }
+  }
 
   componentWillUnmount() {}
 

@@ -1,6 +1,5 @@
 import Taro, { Component } from "@tarojs/taro";
 import classNames from "classnames";
-import { collectSite } from "@/http/http-business";
 import { View, Text } from "@tarojs/components";
 import "./index.scss";
 
